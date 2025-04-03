@@ -1,0 +1,424 @@
+:root {
+  --primary-color: #2A2A2A;
+  --accent-color: #FF6B6B;
+  --background: linear-gradient(45deg, #8df1e9 0%, #608dc5 100%);
+  --text-color: #333;
+  --card-bg: rgba(239, 219, 219, 0.95);
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background: var(--background);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* .header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #1A1A1A 100%);
+  color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+} */ 
+/* will be using later */
+
+/* Add to App.css */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 100% !important;
+  padding: 2rem 3% !important;
+}
+
+/* Add this after your existing :root variables */
+html {
+  background: var(--background);
+  background-attachment: fixed;
+}
+
+.app::before {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+/* Add this media query for mobile */
+@media (max-width: 768px) {
+  .app {
+    padding: 1.5rem !important;
+  }
+}
+
+
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.9);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-container {
+  margin: 2rem 0;
+}
+
+.search-bar {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  background: var(--card-bg);
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  padding: 1rem 1rem 1rem 2.5rem;
+  font-size: 1.1rem;
+  background: transparent;
+  color: var(--text-color);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.5rem;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.category-filter {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.category-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  background: #EEE;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.category-btn.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.category-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.recommendation-card {
+  background: var(--card-bg);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+
+           /*  using fore gradient */
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+
+
+/* Add floating animation to cards */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+}
+
+.recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.card-media {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recommendation-card:hover img {
+  transform: scale(1.05);
+}
+
+.media-type {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255,255,255,0.9);
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-content h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: var(--primary-color);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.genre {
+  background: rgba(255,107,107,0.1);
+  color: var(--accent-color);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.star-icon {
+  font-size: 1.1rem;
+}
+
+.description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.actions {
+  border-top: 1px solid #EEE;
+  padding-top: 1rem;
+}
+
+.like-btn {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,107,107,0.1);
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.like-btn:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: 4rem;
+  color: #666;
+  border-top: 1px solid #EEE;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 2rem 1rem;
+  }
+  
+  .search-bar {
+    padding: 0.5rem;
+  }
+  
+  .search-bar input {
+    padding-left: 2rem;
+  }
+  
+  .category-btn {
+    padding: 0.6rem 1rem;
+  }
+}
+
+
+
+
+
+/* App.css */
+
+.search-container {
+  /* margin: 4rem 0; */
+  /* padding: 2.5rem; */
+  /* background: rgba(240, 231, 231, 0.95); */
+  /* border-radius: 25px; */
+  /* box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); */
+  max-width: 1000px;
+  margin-left: 560px;
+  margin-right: 100px;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 1.8rem 2.5rem;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.3rem;
+  background: #f8f9fa;
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 25px rgba(255, 107, 107, 0.25);
+}
+
+.search-icon {
+  font-size: 4rem;
+  color: var(--accent-color);
+  margin-right: -3rem;
+  z-index: 1;
+}
+
+.category-filter {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.category-btn {
+  padding: 1.5rem 3rem;
+  border: none;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  font-size: 1.2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+}
+
+.category-btn.active {
+  background: var(--accent-color);
+  color: white;
+  transform: scale(1.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.35);
+}
+
+.category-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.25);
+}
+
+.category-btn svg {
+  font-size: 1.5rem;
+}
