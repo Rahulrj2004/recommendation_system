@@ -143,6 +143,112 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
 });
 
 
+// Update recommendations array
+const recommendations = [
+    // Movies
+    { 
+        category: 'movies',
+        title: 'Inception',
+        description: 'A mind-bending heist movie',
+        image: 'https://via.placeholder.com/200x200',
+        director: 'Christopher Nolan',
+        releaseDate: '2010-07-16',
+        rating: '8.8'
+    },
+    
+    // Books
+    {
+        category: 'books',
+        title: '1984',
+        description: 'Dystopian novel by George Orwell',
+        image: 'https://via.placeholder.com/200x200',
+        author: 'George Orwell',
+        published: '1949',
+        genre: 'Dystopian Fiction',
+        pages: 328
+    },
+    {
+        category: 'books',
+        title: 'To Kill a Mockingbird',
+        description: 'Novel about racial injustice',
+        image: 'https://via.placeholder.com/200x200',
+        author: 'Harper Lee',
+        published: '1960',
+        genre: 'Southern Gothic',
+        pages: 281
+    }
+];
+
+// Update displayRecommendations function
+function displayRecommendations(items) {
+    const container = document.getElementById('recommendations');
+    container.innerHTML = '';
+
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `card ${item.category}-card`;
+        
+        let detailsHtml = '';
+        if(item.category === 'books') {
+            detailsHtml = `
+                <div class="card-details">
+                    <p><strong>Author:</strong> ${item.author}</p>
+                    <p><strong>Published:</strong> ${item.published}</p>
+                    <p><strong>Genre:</strong> ${item.genre}</p>
+                    <p><strong>Pages:</strong> ${item.pages}</p>
+                </div>
+            `;
+        } else if(item.category === 'movies') {
+            detailsHtml = `
+                <div class="card-details">
+                    <p><strong>Director:</strong> ${item.director}</p>
+                    <p><strong>Released:</strong> ${item.releaseDate}</p>
+                    <p><strong>Rating:</strong> ${item.rating}/10</p>
+                </div>
+            `;
+        }
+
+        card.innerHTML = `
+            <img src="${item.image}" alt="${item.title}">
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+            ${detailsHtml}
+        `;
+        container.appendChild(card);
+    });
+}
+
+// Update filter function to search book-specific fields
+function filterRecommendations(category = 'all', searchTerm = '') {
+    let filtered = recommendations;
+
+    if (category !== 'all') {
+        filtered = filtered.filter(item => item.category === category);
+    }
+
+    if (searchTerm) {
+        const lowerSearchTerm = searchTerm.toLowerCase();
+        filtered = filtered.filter(item => {
+            const baseMatch = item.title.toLowerCase().includes(lowerSearchTerm) ||
+                             item.description.toLowerCase().includes(lowerSearchTerm);
+            
+            if(item.category === 'books') {
+                return baseMatch || 
+                    item.author.toLowerCase().includes(lowerSearchTerm) ||
+                    item.genre.toLowerCase().includes(lowerSearchTerm);
+            }
+            return baseMatch;
+        });
+    }
+
+    if (filtered.length === 0) {
+        displayNoResults();
+    } else {
+        displayRecommendations(filtered);
+    }
+}
+
+
 
 // card demo
 
