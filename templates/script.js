@@ -143,6 +143,7 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
 });
 
 
+
 // card demo
 
 // document.addEventListener('DOMContentLoaded', () => {
