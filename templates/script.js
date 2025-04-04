@@ -143,32 +143,34 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Show initial recommendations including demo card
-    displayRecommendations(recommendations);
-    setupEventListeners();
-});
+// card demo
 
-// Add this function to handle event listeners
-function setupEventListeners() {
-    // Category filter buttons
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterRecommendations(btn.dataset.category);
-        });
-    });
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Show initial recommendations including demo card
+//     displayRecommendations(recommendations);
+//     setupEventListeners();
+// });
 
-    // Search functionality
-    document.querySelector('.search-btn').addEventListener('click', () => {
-        const searchTerm = document.querySelector('.search-box').value;
-        filterRecommendations(document.querySelector('.category-btn.active').dataset.category, searchTerm);
-    });
 
-    document.querySelector('.search-box').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            filterRecommendations(document.querySelector('.category-btn.active').dataset.category, e.target.value);
-        }
-    });
-}
+// function setupEventListeners() {
+//     // Category filter buttons
+//     document.querySelectorAll('.category-btn').forEach(btn => {
+//         btn.addEventListener('click', () => {
+//             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+//             btn.classList.add('active');
+//             filterRecommendations(btn.dataset.category);
+//         });
+//     });
+
+//     // Search functionality
+//     document.querySelector('.search-btn').addEventListener('click', () => {
+//         const searchTerm = document.querySelector('.search-box').value;
+//         filterRecommendations(document.querySelector('.category-btn.active').dataset.category, searchTerm);
+//     });
+
+//     document.querySelector('.search-box').addEventListener('keypress', (e) => {
+//         if (e.key === 'Enter') {
+//             filterRecommendations(document.querySelector('.category-btn.active').dataset.category, e.target.value);
+//         }
+//     });
+// }
