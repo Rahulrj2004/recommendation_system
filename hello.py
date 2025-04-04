@@ -1,0 +1,1 @@
+print("Fuck you mother fuckers")
