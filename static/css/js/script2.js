@@ -66,9 +66,19 @@ const recommendations = [
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
+    try{
+        let baba = await fetch("/book-all");
+        let data = await baba.json();
+        show(data);
+        console.log("sucefully fetched all the files");
+    }
+    catch(e)
+    {
+        console.error(e);
+    }
 });
 
 function displayRecommendations(items) {
@@ -195,5 +205,24 @@ function setupEventListeners() {
             const category = document.querySelector('.category-btn.active').dataset.category;
             filterRecommendations(category, searchTerm);
         }
+    });
+}
+
+
+
+function show(books)
+{
+    let dada = document.getElementById("recommendations");
+    books.forEach(book=> {
+        let html = `<div class="card books-card">
+                        <img src="${book.image}" alt="The Great Gatsby">
+                        <h3>${book.name}</h3>
+                        <div class="card-details">
+                        <p><strong>Author:</strong>${book.author}</p>
+                        <p><strong>Views:</strong>${book.votes}</p>
+                        <p><strong>Ratings:</strong>${book.rating}</p>
+                        </div>
+                    </div>`
+        dada.innerHTML = dada.innerHTML + html;
     });
 }
