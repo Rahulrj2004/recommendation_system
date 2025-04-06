@@ -66,9 +66,19 @@ const recommendations = [
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
+    try{
+        let baba = await fetch("/book-all");
+        let data = await baba.json();
+        show(data);
+        console.log("sucefully fetched all the files");
+    }
+    catch(e)
+    {
+        console.error(e);
+    }
 });
 
 function displayRecommendations(items) {
@@ -163,6 +173,33 @@ function filterRecommendations(category = 'all', searchTerm = '') {
     }
 }
 
+const  dada = document.getElementById("recommendations");
+async function rakka()
+{
+    const userInput = document.querySelector('.search-box').value;
+
+    const response = await fetch(`${window.location.origin}/recommend_books`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_input: userInput })
+    });
+
+    const pata = await response.json();
+    dada.innerHTML = ""
+    pata.forEach(book => {
+        let btml = `<div class="card books-card">
+                        <img src="${book[2]}" alt="The Great Gatsby">
+                        <h3>${book[0]}</h3>
+                        <div class="card-details">
+                            <p><strong>Author:</strong>${book[1]}</p>
+                        </div>
+                    </div>`
+        dada.innerHTML = dada.innerHTML + btml;
+    });
+}
+
 function displayNoResults() {
     const container = document.getElementById('recommendations');
     container.innerHTML = `
@@ -186,14 +223,38 @@ function setupEventListeners() {
     document.querySelector('.search-btn').addEventListener('click', () => {
         const searchTerm = document.querySelector('.search-box').value;
         const category = document.querySelector('.category-btn.active').dataset.category;
-        filterRecommendations(category, searchTerm);
+        // filterRecommendations(category, searchTerm);
+        rakka();
     });
 
     document.querySelector('.search-box').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             const searchTerm = e.target.value;
             const category = document.querySelector('.category-btn.active').dataset.category;
-            filterRecommendations(category, searchTerm);
+            // filterRecommendations(category, searchTerm);
+            rakka();
         }
+    });
+}
+
+// const recc = document.getElementById("recc");
+// recc.addEventListener("click",()=>{
+//     window.location.href = `${window.location.origin}/index2`
+// })
+
+
+function show(books)
+{
+    books.forEach(book=> {
+        let html = `<div class="card books-card">
+                        <img src="${book.image}" alt="The Great Gatsby">
+                        <h3>${book.name}</h3>
+                        <div class="card-details">
+                        <p><strong>Author:</strong>${book.author}</p>
+                        <p><strong>Views:</strong>${book.votes}</p>
+                        <p><strong>Ratings:</strong>${book.rating}</p>
+                        </div>
+                    </div>`
+        dada.innerHTML = dada.innerHTML + html;
     });
 }
