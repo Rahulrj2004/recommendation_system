@@ -13,7 +13,11 @@ popular_df = pickle.load(open("popular.pkl","rb"))
 pt = pickle.load(open("pt.pkl","rb"))
 books = pickle.load(open("books.pkl","rb")) 
 similarity_score = pickle.load(open("similarity_scores.pkl","rb"))        
-   
+
+movie_list = pickle.load(open("movie.pkl","rb"))
+movie_desc = list(movie_list["tags"].values)
+movie_list = list(movie_list["title"].values)
+
 book_name = list(popular_df["Book-Title"].values)
 author = list(popular_df["Book-Author"].values)
 image = list(popular_df["Image-URL-M"].values)
@@ -24,9 +28,19 @@ rating = list(popular_df["avg_ratings"].values)
 def index():
     return render_template("index.html")
 
-@app.route("/index2")
-def index2():
-    return render_template("index2.html")
+# @app.route("/index2")
+# def index2():
+#     return render_template("index2.html")
+
+@app.route("/movie-all")
+def get_movies():
+    movies = []
+    for i in range(len(movie_list)):
+        movies.append({
+            "m-name":str(movie_list),
+            "desc":str(movie_desc)
+        })
+    return jsonify(movies)
 
 @app.route("/book-all")
 def get_books():
