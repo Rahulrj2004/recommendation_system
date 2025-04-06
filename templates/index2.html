@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Recommendations</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/css.css') }}">
-    <!-- <link rel="stylesheet" href="../static/css/css.css"> -->
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='css/css.css') }}"> -->
+    <link rel="stylesheet" href="../static/css/css.css">
 </head>
 
 <body>
@@ -17,11 +18,13 @@
     </div>
 
     <div class="container">
-        <h1>Recommendation system</h1>
+        <h1>Recommendation System</h1>
 
         <div class="search-container">
-            <input name="user_input" type="text" class="search-box" placeholder="Search movies, books, songs...">
-            <button class="search-btn">Search</button>
+            <form action="/recommend_books" method = "post">
+                <input name="user_input" type="text" class="search-box" placeholder="Search movies, books, songs...">
+                <button class="search-btn">Search</button>
+            </form>
         </div>
 
         <div class="category-filter">
@@ -29,14 +32,12 @@
             <button class="category-btn" data-category="movies">🎥 Movies</button>
             <button class="category-btn" data-category="books">📖 Books</button>
             <button class="category-btn" data-category="songs">🎶 Songs</button>
-            <!-- <button class="category-btn" id="recc" data-category="recommend"> Recommend </button> -->
         </div>
 
         <div class="recommendations" id="recommendations">
         </div>
     </div>
 
-    <script src="../static/css/js/script2.js"></script>
+    <!-- <script src="../static/css/js/script2.js"></script> -->
 </body>
-
 </html>
