@@ -595,3 +595,7 @@ h1 {
     margin-bottom: 10px;
     font-size: 1.5em;
 }
+
+.category-btn[data-category="all"]{
+    display: none;
+} 

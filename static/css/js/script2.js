@@ -1,82 +1,87 @@
 const recommendations = [
     // Movies
-    { 
-        category: 'movies',
-        title: 'Inception',
-        description: 'A mind-bending heist movie',
-        image: 'https://via.placeholder.com/200x200',
-        director: 'Christopher Nolan',
-        releaseDate: '2010',
-        rating: '8.8'
-    },
-    { 
-        category: 'movies',
-        title: 'The Dark Knight',
-        description: 'Batman faces the Joker in Gotham City',
-        image: 'https://via.placeholder.com/200x200',
-        director: 'Christopher Nolan',
-        releaseDate: '2008',
-        rating: '9.0'
-    },
+    // {
+    //     category: 'movies',
+    //     title: 'Inception',
+    //     description: 'A mind-bending heist movie',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     director: 'Christopher Nolan',
+    //     releaseDate: '2010',
+    //     rating: '8.8'
+    // },
+    // {
+    //     category: 'movies',
+    //     title: 'The Dark Knight',
+    //     description: 'Batman faces the Joker in Gotham City',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     director: 'Christopher Nolan',
+    //     releaseDate: '2008',
+    //     rating: '9.0'
+    // },
 
-    // Books
-    {
-        category: 'books',
-        title: '1984',
-        description: 'Dystopian novel by George Orwell',
-        image: 'https://via.placeholder.com/200x200',
-        author: 'George Orwell',
-        published: '1949',
-        genre: 'Dystopian Fiction',
-        pages: 328
-    },
-    {
-        category: 'books',
-        title: 'The Great Gatsby',
-        description: 'American novel set in the Jazz Age',
-        image: 'https://via.placeholder.com/200x200',
-        author: 'F. Scott Fitzgerald',
-        published: '1925',
-        genre: 'Tragedy',
-        pages: 180
-    },
+    // // Books
+    // {
+    //     category: 'books',
+    //     title: '1984',
+    //     description: 'Dystopian novel by George Orwell',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     author: 'George Orwell',
+    //     published: '1949',
+    //     genre: 'Dystopian Fiction',
+    //     pages: 328
+    // },
+    // {
+    //     category: 'books',
+    //     title: 'The Great Gatsby',
+    //     description: 'American novel set in the Jazz Age',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     author: 'F. Scott Fitzgerald',
+    //     published: '1925',
+    //     genre: 'Tragedy',
+    //     pages: 180
+    // },
 
-    // Songs
-    {
-        category: 'songs',
-        title: 'Bohemian Rhapsody',
-        description: 'Classic rock ballad by Queen',
-        image: 'https://via.placeholder.com/200x200',
-        artist: 'Queen',
-        album: 'A Night at the Opera',
-        duration: '5:55',
-        released: '1975'
-    },
-    {
-        category: 'songs',
-        title: 'Hotel California',
-        description: 'Iconic song by Eagles',
-        image: 'https://via.placeholder.com/200x200',
-        artist: 'Eagles',
-        album: 'Hotel California',
-        duration: '6:30',
-        released: '1977'
-    }
+    // // Songs
+    // {
+    //     category: 'songs',
+    //     title: 'Bohemian Rhapsody',
+    //     description: 'Classic rock ballad by Queen',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     artist: 'Queen',
+    //     album: 'A Night at the Opera',
+    //     duration: '5:55',
+    //     released: '1975'
+    // },
+    // {
+    //     category: 'songs',
+    //     title: 'Hotel California',
+    //     description: 'Iconic song by Eagles',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     artist: 'Eagles',
+    //     album: 'Hotel California',
+    //     duration: '6:30',
+    //     released: '1977'
+    // }
 ];
-
 
 
 document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
-    try{
+    try {
         let baba = await fetch("/book-all");
         let data = await baba.json();
         show(data);
         console.log("sucefully fetched all the files");
+
+        // let ponga = await fetch("/movies-all")
+        // let data3 = await ponga.json()
+        // console.log("movie data : "+ data3)
+        // Mshow(data3)
+        // console.log("done getting")
+        // console.log("Sucessfully fetched all the movies")
     }
-    catch(e)
-    {
+    catch (e) {
         console.error(e);
     }
 });
@@ -88,9 +93,9 @@ function displayRecommendations(items) {
     items.forEach(item => {
         const card = document.createElement('div');
         card.className = `card ${item.category}-card`;
-        
+
         let detailsHtml = '';
-        switch(item.category) {
+        switch (item.category) {
             case 'movies':
                 detailsHtml = `
                     <div class="card-details">
@@ -99,7 +104,7 @@ function displayRecommendations(items) {
                         <p><strong>Rating:</strong> ${item.rating}/10</p>
                     </div>`;
                 break;
-                
+ 
             case 'books':
                 detailsHtml = `
                     <div class="card-details">
@@ -109,7 +114,7 @@ function displayRecommendations(items) {
                         <p><strong>Pages:</strong> ${item.pages}</p>
                     </div>`;
                 break;
-                
+
             case 'songs':
                 detailsHtml = `
                     <div class="card-details">
@@ -144,20 +149,20 @@ function filterRecommendations(category = 'all', searchTerm = '') {
         const lowerSearchTerm = searchTerm.toLowerCase();
         filtered = filtered.filter(item => {
             const baseMatch = item.title.toLowerCase().includes(lowerSearchTerm) ||
-                             item.description.toLowerCase().includes(lowerSearchTerm);
-            
-            switch(item.category) {
+                item.description.toLowerCase().includes(lowerSearchTerm);
+
+            switch (item.category) {
                 case 'movies':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.director.toLowerCase().includes(lowerSearchTerm);
-                        
+
                 case 'books':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.author.toLowerCase().includes(lowerSearchTerm) ||
                         item.genre.toLowerCase().includes(lowerSearchTerm);
-                        
+
                 case 'songs':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.artist.toLowerCase().includes(lowerSearchTerm) ||
                         item.album.toLowerCase().includes(lowerSearchTerm);
             }
@@ -173,9 +178,8 @@ function filterRecommendations(category = 'all', searchTerm = '') {
     }
 }
 
-const  dada = document.getElementById("recommendations");
-async function rakka()
-{
+const dada = document.getElementById("recommendations");
+async function rakka() {
     const userInput = document.querySelector('.search-box').value;
 
     const response = await fetch(`${window.location.origin}/recommend_books`, {
@@ -197,6 +201,33 @@ async function rakka()
                         </div>
                     </div>`
         dada.innerHTML = dada.innerHTML + btml;
+    });
+}
+
+async function dakka() {
+    const input = document.querySelector('.search-box').value
+    console.log(input)
+    const response1 = await fetch(`${window.location.origin}/recommend-movies`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_Input: input })
+    });
+    const daka = await response1.json();
+    dada.innerHTML = "";
+    daka.forEach(movie => {
+        let ctml = `<div class="card movies-card">
+                        <img src="${movie.image}" alt="Inception">
+                        <h3>${movie.name}</h3>
+                        <p>A mind-bending heist movie</p>
+                         <div class="card-details">
+                            <p><strong>Director:</strong> Christopher Nolan</p>
+                            <p><strong>Released:</strong> 2010</p>
+                            <p><strong>Rating:</strong> 8.8/10</p>
+                        </div>
+                    </div>`
+        dada.innerHTML += ctml;
     });
 }
 
@@ -224,7 +255,8 @@ function setupEventListeners() {
         const searchTerm = document.querySelector('.search-box').value;
         const category = document.querySelector('.category-btn.active').dataset.category;
         // filterRecommendations(category, searchTerm);
-        rakka();
+        if (category === "books") rakka();
+        else if (category === "movies") dakka();
     });
 
     document.querySelector('.search-box').addEventListener('keypress', (e) => {
@@ -232,7 +264,8 @@ function setupEventListeners() {
             const searchTerm = e.target.value;
             const category = document.querySelector('.category-btn.active').dataset.category;
             // filterRecommendations(category, searchTerm);
-            rakka();
+            if (category === "books") rakka();
+            else if (category === "movies") dakka();
         }
     });
 }
@@ -243,9 +276,8 @@ function setupEventListeners() {
 // })
 
 
-function show(books)
-{
-    books.forEach(book=> {
+function show(books) {
+    books.forEach(book => {
         let html = `<div class="card books-card">
                         <img src="${book.image}" alt="The Great Gatsby">
                         <h3>${book.name}</h3>
@@ -256,5 +288,21 @@ function show(books)
                         </div>
                     </div>`
         dada.innerHTML = dada.innerHTML + html;
+    });
+}
+
+function Mshow(movies) {
+    movies.forEach(movie => {
+        let dtml = `<div class="card movies-card">
+                        <img src="${movie.image}" alt="Inception">
+                        <h3>${movie.m_name}</h3>
+                        <p>A mind-bending heist movie</p>
+                         <div class="card-details">
+                            <p><strong>Director:</strong> Christopher Nolan</p>
+                            <p><strong>Released:</strong> 2010</p>
+                            <p><strong>Rating:</strong> 8.8/10</p>
+                        </div>
+                    </div>`
+        dada.innerHTML = dada.innerHTML + dtml;
     });
 }
