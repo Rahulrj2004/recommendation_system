@@ -2,11 +2,11 @@ from flask import Flask, render_template,jsonify,request
 import pickle
 import numpy as np
 
-app = Flask(__name__)
+app = Flask(__name__)        
 
 # Load the recommendation model
 # with open("recommendation_model.pkl", "rb") as f:
-#     model = pickle.load(f)
+#     model = pickle.load(f)  
 
 # Load the dataset (popular_df)
 popular_df = pickle.load(open("popular.pkl","rb"))
@@ -20,11 +20,11 @@ movie_list = list(movie_list["title"].values)
 
 book_name = list(popular_df["Book-Title"].values)
 author = list(popular_df["Book-Author"].values)
-image = list(popular_df["Image-URL-M"].values)
+image = list(popular_df["Image-URL-M"].values)  
 votes = list(popular_df["num_ratings"].values)
 rating = list(popular_df["avg_ratings"].values)
-
-@app.route("/")
+   
+@app.route("/")  
 def index():
     return render_template("index.html")
 
@@ -74,4 +74,5 @@ def recommend():
     return jsonify(data)
 
 if __name__ == "__main__":  
-    app.run(debug=True)   
+    app.run(debug=True)        
+                

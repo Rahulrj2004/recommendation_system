@@ -1,75 +1,95 @@
 const recommendations = [
     // Movies
-    { 
-        category: 'movies',
-        title: 'Inception',
-        description: 'A mind-bending heist movie',
-        image: 'https://via.placeholder.com/200x200',
-        director: 'Christopher Nolan',
-        releaseDate: '2010',
-        rating: '8.8'
-    },
-    { 
-        category: 'movies',
-        title: 'The Dark Knight',
-        description: 'Batman faces the Joker in Gotham City',
-        image: 'https://via.placeholder.com/200x200',
-        director: 'Christopher Nolan',
-        releaseDate: '2008',
-        rating: '9.0'
-    },
+    // { 
+    //     category: 'movies',  
+    //     title: 'Inception',
+    //     description: 'A mind-bending heist movie',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     director: 'Christopher Nolan',
+    //     releaseDate: '2010',
+    //     rating: '8.8'
+    // }, 
+    // { 
+    //     category: 'movies',
+    //     title: 'The Dark Knight',
+    //     description: 'Batman faces the Joker in Gotham City',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     director: 'Christopher Nolan',
+    //     releaseDate: '2008',
+    //     rating: '9.0'
+    // },
 
-    // Books
-    {
-        category: 'books',
-        title: '1984',
-        description: 'Dystopian novel by George Orwell',
-        image: 'https://via.placeholder.com/200x200',
-        author: 'George Orwell',
-        published: '1949',
-        genre: 'Dystopian Fiction',
-        pages: 328
-    },
-    {
-        category: 'books',
-        title: 'The Great Gatsby',
-        description: 'American novel set in the Jazz Age',
-        image: 'https://via.placeholder.com/200x200',
-        author: 'F. Scott Fitzgerald',
-        published: '1925',
-        genre: 'Tragedy',
-        pages: 180
-    },
+    // // Books
+    // {
+    //     category: 'books',
+    //     title: '1984',
+    //     description: 'Dystopian novel by George Orwell',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     author: 'George Orwell',
+    //     published: '1949',
+    //     genre: 'Dystopian Fiction',
+    //     pages: 328
+    // },
+    // {
+    //     category: 'books',
+    //     title: 'The Great Gatsby',
+    //     description: 'American novel set in the Jazz Age',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     author: 'F. Scott Fitzgerald',
+    //     published: '1925',
+    //     genre: 'Tragedy',
+    //     pages: 180
+    // },
 
-    // Songs
-    {
-        category: 'songs',
-        title: 'Bohemian Rhapsody',
-        description: 'Classic rock ballad by Queen',
-        image: 'https://via.placeholder.com/200x200',
-        artist: 'Queen',
-        album: 'A Night at the Opera',
-        duration: '5:55',
-        released: '1975'
-    },
-    {
-        category: 'songs',
-        title: 'Hotel California',
-        description: 'Iconic song by Eagles',
-        image: 'https://via.placeholder.com/200x200',
-        artist: 'Eagles',
-        album: 'Hotel California',
-        duration: '6:30',
-        released: '1977'
-    }
-];
+    // // Songs
+    // {
+    //     category: 'songs',
+    //     title: 'Bohemian Rhapsody',
+    //     description: 'Classic rock ballad by Queen',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     artist: 'Queen',
+    //     album: 'A Night at the Opera',
+    //     duration: '5:55',
+    //     released: '1975'
+    // },
+    // {
+    //     category: 'songs',
+    //     title: 'Hotel California',
+    //     description: 'Iconic song by Eagles',
+    //     image: 'https://via.placeholder.com/200x200',
+    //     artist: 'Eagles',
+    //     album: 'Hotel California',
+    //     duration: '6:30',
+    //     released: '1977'
+    // }
+]; 
 
+// const recommendations=[
+//     {
+//     category: 'movies',
+//         title: String,
+//         description: String,
+//         image: String
+//     },
+//     {
+//         category: 'books',
+//             title: String,
+//             description: String,
+//             image: String
+//     }, 
+//     {
+//         category: 'songs',
+//             title: String, 
+//             description: String,
+//             image: String
+//     }
+// ]
 
 
 document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
-    try{
+    try{ 
         let baba = await fetch("/book-all");
         let data = await baba.json();
         show(data);
@@ -131,11 +151,11 @@ function displayRecommendations(items) {
     });
 }
 
-function filterRecommendations(category = 'all', searchTerm = '') {
+function filterRecommendations(category = 'All', searchTerm = '') { 
     let filtered = recommendations;
 
     // Category Filter
-    if (category !== 'all') {
+    if (category !== 'All') {
         filtered = filtered.filter(item => item.category === category);
     }
 
@@ -178,7 +198,9 @@ async function rakka()
 {
     const userInput = document.querySelector('.search-box').value;
 
-    const response = await fetch(`${window.location.origin}/recommend_books`, {
+    const response = await fetch(`${window.location.origin}/recommend_books`,
+    // const response = await fetch('/recommend_books' 
+        {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -210,6 +232,9 @@ function displayNoResults() {
 }
 
 function setupEventListeners() {
+
+
+    // document.querySelector('[data-category="movies"]').classList.add('active');
     // Category Filters
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -226,6 +251,7 @@ function setupEventListeners() {
         // filterRecommendations(category, searchTerm);
         rakka();
     });
+ 
 
     document.querySelector('.search-box').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -258,3 +284,124 @@ function show(books)
         dada.innerHTML = dada.innerHTML + html;
     });
 }
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     setupEventListeners();
+//     loadInitialBooks();
+// });
+
+// async function loadInitialBooks() {
+//     try {
+//         const response = await fetch("/book-all");
+//         const books = await response.json();
+//         displayBooks(books);
+//     } catch (error) {
+//         console.error("Error loading initial books:", error);
+//         showErrorState();
+//     }
+// }
+
+// async function searchBooks(userInput) {
+//     try {
+//         showLoadingState();
+        
+//         const response = await fetch("/recommend_books", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ user_input: userInput })
+//         });
+
+//         const recommendations = await response.json();
+//         displayRecommendations(recommendations);
+        
+//     } catch (error) {
+//         console.error("Search error:", error);
+//         showErrorState();
+//     }
+// }
+
+// function displayBooks(books) {
+//     const container = document.getElementById('recommendations');
+//     container.innerHTML = '';
+
+//     books.forEach(book => {
+//         const card = document.createElement('div');
+//         card.className = 'card';
+//         card.innerHTML = `
+//             <img src="${book.image}" alt="${book.name}">
+//             <h3>${book.name}</h3>
+//             <div class="card-details">
+//                 <p><strong>Author:</strong> ${book.author}</p>
+//                 <p><strong>Rating:</strong> ${book.rating}</p>
+//                 <p><strong>Votes:</strong> ${book.votes}</p>
+//             </div>
+//         `;
+//         container.appendChild(card);
+//     });
+// }
+
+// function displayRecommendations(recommendations) {
+//     const container = document.getElementById('recommendations');
+//     container.innerHTML = '';
+
+//     recommendations.forEach(book => {
+//         const card = document.createElement('div');
+//         card.className = 'card';
+//         card.innerHTML = `
+//             <img src="${book[2]}" alt="${book[0]}">
+//             <h3>${book[0]}</h3>
+//             <div class="card-details">
+//                 <p><strong>Author:</strong> ${book[1]}</p>
+//             </div>
+//         `;
+//         container.appendChild(card);
+//     });
+// }
+
+// function showLoadingState() {
+//     const container = document.getElementById('recommendations');
+//     container.innerHTML = `
+//         <div class="loading-state">
+//             <div class="loader"></div>
+//             <p>Searching our book database...</p>
+//         </div>`;
+// }
+
+// function showErrorState() {
+//     const container = document.getElementById('recommendations');
+//     container.innerHTML = `
+//         <div class="no-results">
+//             <h3>Error loading recommendations</h3>
+//             <p>Please try again later</p>
+//         </div>`;
+// }
+
+// function setupEventListeners() {
+//     const form = document.getElementById('searchForm');
+//     const searchInput = document.querySelector('.search-box');
+    
+//     form.addEventListener('submit', async (e) => {
+//         e.preventDefault();
+//         await searchBooks(searchInput.value);
+//     });
+
+//     searchInput.addEventListener('input', debounce(async () => {
+//         if (searchInput.value.trim()) {
+//             await searchBooks(searchInput.value);
+//         }
+//     }, 300));
+// }
+
+// function debounce(fn, delay) {
+//     let timeout;
+//     return (...args) => {
+//         clearTimeout(timeout);
+//         timeout = setTimeout(() => fn.apply(this, args), delay);
+//     };
+// }
