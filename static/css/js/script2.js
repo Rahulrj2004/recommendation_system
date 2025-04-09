@@ -1,15 +1,15 @@
 const recommendations = [
     // Movies
-    // { 
-    //     category: 'movies',  
+    // {
+    //     category: 'movies',
     //     title: 'Inception',
     //     description: 'A mind-bending heist movie',
     //     image: 'https://via.placeholder.com/200x200',
     //     director: 'Christopher Nolan',
     //     releaseDate: '2010',
     //     rating: '8.8'
-    // }, 
-    // { 
+    // },
+    // {
     //     category: 'movies',
     //     title: 'The Dark Knight',
     //     description: 'Batman faces the Joker in Gotham City',
@@ -62,7 +62,7 @@ const recommendations = [
     //     duration: '6:30',
     //     released: '1977'
     // }
-]; 
+];
 
 // const recommendations=[
 //     {
@@ -85,18 +85,23 @@ const recommendations = [
 //     }
 // ]
 
-
 document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
-    try{ 
+    try {
         let baba = await fetch("/book-all");
         let data = await baba.json();
         show(data);
         console.log("sucefully fetched all the files");
+
+        // let ponga = await fetch("/movies-all")
+        // let data3 = await ponga.json()
+        // console.log("movie data : "+ data3)
+        // Mshow(data3)
+        // console.log("done getting")
+        // console.log("Sucessfully fetched all the movies")
     }
-    catch(e)
-    {
+    catch (e) {
         console.error(e);
     }
 });
@@ -108,9 +113,9 @@ function displayRecommendations(items) {
     items.forEach(item => {
         const card = document.createElement('div');
         card.className = `card ${item.category}-card`;
-        
+
         let detailsHtml = '';
-        switch(item.category) {
+        switch (item.category) {
             case 'movies':
                 detailsHtml = `
                     <div class="card-details">
@@ -119,7 +124,7 @@ function displayRecommendations(items) {
                         <p><strong>Rating:</strong> ${item.rating}/10</p>
                     </div>`;
                 break;
-                
+ 
             case 'books':
                 detailsHtml = `
                     <div class="card-details">
@@ -129,7 +134,7 @@ function displayRecommendations(items) {
                         <p><strong>Pages:</strong> ${item.pages}</p>
                     </div>`;
                 break;
-                
+
             case 'songs':
                 detailsHtml = `
                     <div class="card-details">
@@ -164,20 +169,20 @@ function filterRecommendations(category = 'All', searchTerm = '') {
         const lowerSearchTerm = searchTerm.toLowerCase();
         filtered = filtered.filter(item => {
             const baseMatch = item.title.toLowerCase().includes(lowerSearchTerm) ||
-                             item.description.toLowerCase().includes(lowerSearchTerm);
-            
-            switch(item.category) {
+                item.description.toLowerCase().includes(lowerSearchTerm);
+
+            switch (item.category) {
                 case 'movies':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.director.toLowerCase().includes(lowerSearchTerm);
-                        
+
                 case 'books':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.author.toLowerCase().includes(lowerSearchTerm) ||
                         item.genre.toLowerCase().includes(lowerSearchTerm);
-                        
+
                 case 'songs':
-                    return baseMatch || 
+                    return baseMatch ||
                         item.artist.toLowerCase().includes(lowerSearchTerm) ||
                         item.album.toLowerCase().includes(lowerSearchTerm);
             }
@@ -193,9 +198,8 @@ function filterRecommendations(category = 'All', searchTerm = '') {
     }
 }
 
-const  dada = document.getElementById("recommendations");
-async function rakka()
-{
+const dada = document.getElementById("recommendations");
+async function rakka() {
     const userInput = document.querySelector('.search-box').value;
 
     const response = await fetch(`${window.location.origin}/recommend_books`,
@@ -219,6 +223,33 @@ async function rakka()
                         </div>
                     </div>`
         dada.innerHTML = dada.innerHTML + btml;
+    });
+}
+
+async function dakka() {
+    const input = document.querySelector('.search-box').value
+    console.log(input)
+    const response1 = await fetch(`${window.location.origin}/recommend-movies`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_Input: input })
+    });
+    const daka = await response1.json();
+    dada.innerHTML = "";
+    daka.forEach(movie => {
+        let ctml = `<div class="card movies-card">
+                        <img src="${movie.image}" alt="Inception">
+                        <h3>${movie.name}</h3>
+                        <p>A mind-bending heist movie</p>
+                         <div class="card-details">
+                            <p><strong>Director:</strong> Christopher Nolan</p>
+                            <p><strong>Released:</strong> 2010</p>
+                            <p><strong>Rating:</strong> 8.8/10</p>
+                        </div>
+                    </div>`
+        dada.innerHTML += ctml;
     });
 }
 
@@ -249,7 +280,8 @@ function setupEventListeners() {
         const searchTerm = document.querySelector('.search-box').value;
         const category = document.querySelector('.category-btn.active').dataset.category;
         // filterRecommendations(category, searchTerm);
-        rakka();
+        if (category === "books") rakka();
+        else if (category === "movies") dakka();
     });
  
 
@@ -258,7 +290,8 @@ function setupEventListeners() {
             const searchTerm = e.target.value;
             const category = document.querySelector('.category-btn.active').dataset.category;
             // filterRecommendations(category, searchTerm);
-            rakka();
+            if (category === "books") rakka();
+            else if (category === "movies") dakka();
         }
     });
 }
@@ -269,9 +302,8 @@ function setupEventListeners() {
 // })
 
 
-function show(books)
-{
-    books.forEach(book=> {
+function show(books) {
+    books.forEach(book => {
         let html = `<div class="card books-card">
                         <img src="${book.image}" alt="The Great Gatsby">
                         <h3>${book.name}</h3>
@@ -285,123 +317,18 @@ function show(books)
     });
 }
 
-
-
-
-
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     setupEventListeners();
-//     loadInitialBooks();
-// });
-
-// async function loadInitialBooks() {
-//     try {
-//         const response = await fetch("/book-all");
-//         const books = await response.json();
-//         displayBooks(books);
-//     } catch (error) {
-//         console.error("Error loading initial books:", error);
-//         showErrorState();
-//     }
-// }
-
-// async function searchBooks(userInput) {
-//     try {
-//         showLoadingState();
-        
-//         const response = await fetch("/recommend_books", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ user_input: userInput })
-//         });
-
-//         const recommendations = await response.json();
-//         displayRecommendations(recommendations);
-        
-//     } catch (error) {
-//         console.error("Search error:", error);
-//         showErrorState();
-//     }
-// }
-
-// function displayBooks(books) {
-//     const container = document.getElementById('recommendations');
-//     container.innerHTML = '';
-
-//     books.forEach(book => {
-//         const card = document.createElement('div');
-//         card.className = 'card';
-//         card.innerHTML = `
-//             <img src="${book.image}" alt="${book.name}">
-//             <h3>${book.name}</h3>
-//             <div class="card-details">
-//                 <p><strong>Author:</strong> ${book.author}</p>
-//                 <p><strong>Rating:</strong> ${book.rating}</p>
-//                 <p><strong>Votes:</strong> ${book.votes}</p>
-//             </div>
-//         `;
-//         container.appendChild(card);
-//     });
-// }
-
-// function displayRecommendations(recommendations) {
-//     const container = document.getElementById('recommendations');
-//     container.innerHTML = '';
-
-//     recommendations.forEach(book => {
-//         const card = document.createElement('div');
-//         card.className = 'card';
-//         card.innerHTML = `
-//             <img src="${book[2]}" alt="${book[0]}">
-//             <h3>${book[0]}</h3>
-//             <div class="card-details">
-//                 <p><strong>Author:</strong> ${book[1]}</p>
-//             </div>
-//         `;
-//         container.appendChild(card);
-//     });
-// }
-
-// function showLoadingState() {
-//     const container = document.getElementById('recommendations');
-//     container.innerHTML = `
-//         <div class="loading-state">
-//             <div class="loader"></div>
-//             <p>Searching our book database...</p>
-//         </div>`;
-// }
-
-// function showErrorState() {
-//     const container = document.getElementById('recommendations');
-//     container.innerHTML = `
-//         <div class="no-results">
-//             <h3>Error loading recommendations</h3>
-//             <p>Please try again later</p>
-//         </div>`;
-// }
-
-// function setupEventListeners() {
-//     const form = document.getElementById('searchForm');
-//     const searchInput = document.querySelector('.search-box');
-    
-//     form.addEventListener('submit', async (e) => {
-//         e.preventDefault();
-//         await searchBooks(searchInput.value);
-//     });
-
-//     searchInput.addEventListener('input', debounce(async () => {
-//         if (searchInput.value.trim()) {
-//             await searchBooks(searchInput.value);
-//         }
-//     }, 300));
-// }
-
-// function debounce(fn, delay) {
-//     let timeout;
-//     return (...args) => {
-//         clearTimeout(timeout);
-//         timeout = setTimeout(() => fn.apply(this, args), delay);
-//     };
-// }
+function Mshow(movies) {
+    movies.forEach(movie => {
+        let dtml = `<div class="card movies-card">
+                        <img src="${movie.image}" alt="Inception">
+                        <h3>${movie.m_name}</h3>
+                        <p>A mind-bending heist movie</p>
+                         <div class="card-details">
+                            <p><strong>Director:</strong> Christopher Nolan</p>
+                            <p><strong>Released:</strong> 2010</p>
+                            <p><strong>Rating:</strong> 8.8/10</p>
+                        </div>
+                    </div>`
+        dada.innerHTML = dada.innerHTML + dtml;
+    });
+}

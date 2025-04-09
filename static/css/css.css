@@ -596,6 +596,6 @@ h1 {
     font-size: 1.5em;
 }
 
-.category-btn[data-category="all"] {
+.category-btn[data-category="all"]{
     display: none;
-}    
+} 
