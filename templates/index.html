@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Recommendations</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/css.css') }}">
-    <!-- <link rel="stylesheet" href="../static/css/css.css"> -->
 </head>
 
 <body>
@@ -22,26 +21,54 @@
         <div class="search-container">
             <input name="user_input" type="text" class="search-box" placeholder="Search movies, books, songs...">
             <button class="search-btn">Search</button>
+            <!-- Copyable suggestions that appear near search bar -->
+            <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+                <span class="suggestion-label">Try: </span>
+                <span class="copyable-suggestion" id="suggestion1"></span>
+                <span class="suggestion-separator">, </span>
+                <span class="copyable-suggestion" id="suggestion2"></span>
+                <span class="suggestion-separator">, </span>
+                <span class="copyable-suggestion" id="suggestion3"></span>
+            </div>
         </div>
 
         <div class="category-filter">
-            <!-- <button class="category-btn active" data-category="all">All</button> -->  
             <button class="category-btn" data-category="movies">🎥 Movies</button>
             <button class="category-btn" data-category="books">📖 Books</button>
             <button class="category-btn" data-category="songs">🎶 Songs</button>
-            <!-- <button class="category-btn" id="recc" data-category="recommend"> Recommend </button> -->
+        </div>
+
+        <!-- Example movie suggestions - only shown when movies category is active -->
+        <div class="examples-section" id="movieExamples" style="display: none;">
+            <p class="examples-title">Try searching for:</p>
+            <div class="examples-container">
+                <button class="example-btn example-movie-btn" data-movie="Inception">Inception</button>
+                <button class="example-btn example-movie-btn" data-movie="The Dark Knight">The Dark Knight</button>
+                <button class="example-btn example-movie-btn" data-movie="Toy Story">Toy Story</button>
+            </div>
+        </div>
+
+        <!-- Example song suggestions - only shown when songs category is active -->
+        <div class="examples-section" id="songExamples" style="display: none;">
+            <p class="examples-title">Try searching for:</p>
+            <div class="examples-container">
+                <button class="example-btn example-song-btn" data-song="Fight">Fight</button>
+                <button class="example-btn example-song-btn" data-song="Come With Me">Come With Me</button>
+                <button class="example-btn example-song-btn" data-song="Bang">Bang</button>
+            </div>
         </div>
 
         <div class="recommendations" id="recommendations"> 
         </div>
     </div>
+    
     <div id="trailer-modal" class="trailer-modal hidden">
         <div class="modal-content">
           <span class="close-btn">&times;</span>
           <iframe id="trailer-video" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
           <p id="desc"></p>
         </div>
-      </div>
+    </div>
 
     <script src="../static/css/js/script2.js"></script>
 </body>

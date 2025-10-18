@@ -1,90 +1,37 @@
-const recommendations = [
-    // Movies
-    // {
-    //     category: 'movies',
-    //     title: 'Inception',
-    //     description: 'A mind-bending heist movie',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     director: 'Christopher Nolan',
-    //     releaseDate: '2010',
-    //     rating: '8.8'
-    // },
-    // {
-    //     category: 'movies',
-    //     title: 'The Dark Knight',
-    //     description: 'Batman faces the Joker in Gotham City',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     director: 'Christopher Nolan',
-    //     releaseDate: '2008',
-    //     rating: '9.0'
-    // },
-
-    // // Books
-    // {
-    //     category: 'books',
-    //     title: '1984',
-    //     description: 'Dystopian novel by George Orwell',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     author: 'George Orwell',
-    //     published: '1949',
-    //     genre: 'Dystopian Fiction',
-    //     pages: 328
-    // },
-    // {
-    //     category: 'books',
-    //     title: 'The Great Gatsby',
-    //     description: 'American novel set in the Jazz Age',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     author: 'F. Scott Fitzgerald',
-    //     published: '1925',
-    //     genre: 'Tragedy',
-    //     pages: 180
-    // },
-
-    // // Songs
-    // {
-    //     category: 'songs',
-    //     title: 'Bohemian Rhapsody',
-    //     description: 'Classic rock ballad by Queen',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     artist: 'Queen',
-    //     album: 'A Night at the Opera',
-    //     duration: '5:55',
-    //     released: '1975'
-    // },
-    // {
-    //     category: 'songs',
-    //     title: 'Hotel California',
-    //     description: 'Iconic song by Eagles',
-    //     image: 'https://via.placeholder.com/200x200',
-    //     artist: 'Eagles',
-    //     album: 'Hotel California',
-    //     duration: '6:30',
-    //     released: '1977'
-    // }
-];
-
+const recommendations = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     displayRecommendations(recommendations);
     setupEventListeners();
+    showLoadingState();
     try {
         let baba = await fetch("/book-all");
         let data = await baba.json();
         show(data);
-        console.log("sucefully fetched all the files");
-
-        // let ponga = await fetch("/movies-all")
-        // let data3 = await ponga.json()
-        // console.log("movie data : "+ data3)
-        // Mshow(data3)
-        // console.log("done getting")
-        // console.log("Sucessfully fetched all the movies")
+        console.log("successfully fetched all the files");
     }
     catch (e) {
         console.error(e);
+        hideLoadingState();
+        displayNoResults();
     }
 });
+
+function showLoadingState() {
+    const container = document.getElementById('recommendations');
+    container.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; color: rgba(255,255,255,0.7);">Loading recommendations...</p>
+        </div>`;
+}
+
+function hideLoadingState() {
+    const loadingSpinner = document.querySelector('.loading-spinner');
+    if (loadingSpinner) {
+        loadingSpinner.remove();
+    }
+}
 
 function displayRecommendations(items) {
     const container = document.getElementById('recommendations');
@@ -139,12 +86,10 @@ function displayRecommendations(items) {
 function filterRecommendations(category = 'all', searchTerm = '') {
     let filtered = recommendations;
 
-    // Category Filter
     if (category !== 'all') {
         filtered = filtered.filter(item => item.category === category);
     }
 
-    // Search Filter
     if (searchTerm) {
         const lowerSearchTerm = searchTerm.toLowerCase();
         filtered = filtered.filter(item => {
@@ -170,7 +115,6 @@ function filterRecommendations(category = 'all', searchTerm = '') {
         });
     }
 
-    // Display results
     if (filtered.length === 0) {
         displayNoResults();
     } else {
@@ -179,88 +123,125 @@ function filterRecommendations(category = 'all', searchTerm = '') {
 }
 
 const dada = document.getElementById("recommendations");
+
 async function rakka() {
     const userInput = document.querySelector('.search-box').value;
+    
+    showLoadingState();
+    
+    try {
+        const response = await fetch(`${window.location.origin}/recommend_books`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user_input: userInput })
+        });
 
-    const response = await fetch(`${window.location.origin}/recommend_books`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ user_input: userInput })
-    });
-
-    const pata = await response.json();
-    dada.innerHTML = "";
-    if (pata.length === 0) {
+        const pata = await response.json();
+        hideLoadingState();
+        dada.innerHTML = "";
+        
+        if (pata.length === 0) {
+            displayNoResults();
+            return;
+        }
+        
+        pata.forEach(book => {
+            let btml = `<div class="card books-card">
+                            <img src="${book[2]}" alt="Book Cover">
+                            <h3>${book[0]}</h3>
+                            <div class="card-details">
+                                <p><strong>Author:</strong> ${book[1]}</p>
+                            </div>
+                        </div>`
+            dada.innerHTML = dada.innerHTML + btml;
+        });
+    } catch (error) {
+        hideLoadingState();
+        console.error('Error fetching book recommendations:', error);
         displayNoResults();
-        return;
     }
-    pata.forEach(book => {
-        let btml = `<div class="card books-card">
-                        <img src="${book[2]}" alt="The Great Gatsby">
-                        <h3>${book[0]}</h3>
-                        <div class="card-details">
-                            <p><strong>Author:</strong>${book[1]}</p>
-                        </div>
-                    </div>`
-        dada.innerHTML = dada.innerHTML + btml;
-    });
 }
 
 async function dakka() {
-    const input = document.querySelector('.search-box').value
-    console.log(input)
-    const response1 = await fetch(`${window.location.origin}/recommend-movies`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ user_Input: input })
-    });
-    const daka = await response1.json();
-    dada.innerHTML = "";
-    if (daka.length === 0) {
+    const input = document.querySelector('.search-box').value;
+    console.log(input);
+    
+    showLoadingState();
+    
+    try {
+        const response1 = await fetch(`${window.location.origin}/recommend-movies`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user_Input: input })
+        });
+        
+        const daka = await response1.json();
+        hideLoadingState();
+        dada.innerHTML = "";
+        
+        if (daka.length === 0) {
+            displayNoResults();
+            return;
+        }
+        
+        daka.forEach(movie => {
+            let ctml = `<div class="card movies-card" data-movie-id="${movie.id}">
+                            <img src="${movie.image}" alt="${movie.name}">
+                            <h3>${movie.name}</h3>
+                            <p class="description">
+                                <span class="short-text">${movie.tag}</span>
+                                <span class="full-text hidden">${movie.tag}</span>
+                                <button class="toggle-btn">...more</button>
+                            </p>
+                            <div class="card-details">
+                                <p><strong>Released:</strong> ${movie.release}</p>
+                                <p><strong>Rating:</strong> ${parseFloat(movie.ratings).toFixed(1)}</p>
+                            </div>
+                        </div>`
+            dada.insertAdjacentHTML("beforeend", ctml);
+            setupCardClickListeners(movie.tag);
+        });
+    } catch (error) {
+        hideLoadingState();
+        console.error('Error fetching movie recommendations:', error);
         displayNoResults();
-        return;
     }
-    daka.forEach(movie => {
-        let ctml = `<div class="card movies-card" data-movie-id="${movie.id}">
-                        <img src="${movie.image}" alt="Inception">
-                        <h3>${movie.name}</h3>
-                        <p class="description">
-                            <span class="short-text">${movie.tag}</span>
-                            <span class="full-text hidden">${movie.tag}</span>
-                            <button class="toggle-btn">...more</button>
-                        </p>
-                        <div class="card-details">
-                        <p><strong>Released:</strong> ${movie.release}</p>
-                        <p><strong>Rating:</strong>  ${parseFloat(movie.ratings).toFixed(1)}</p>
-                        </div>
-                    </div>`
-        dada.insertAdjacentHTML("beforeend", ctml);
-        setupCardClickListeners(movie.tag);
-    });
 }
 
 async function Sakka() {
     const userInput4 = document.querySelector('.search-box').value;
     console.log(userInput4);
-    const response4 = await fetch(`${window.location.origin}/recommend-songs`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ User_input: userInput4 })
-    });
+    
+    showLoadingState();
+    
+    try {
+        const response4 = await fetch(`${window.location.origin}/recommend-songs`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ User_input: userInput4 })
+        });
 
-    const pata4 = await response4.json();
-    dada.innerHTML = "";
-    if (pata4.length === 0) {
+        const pata4 = await response4.json();
+        hideLoadingState();
+        dada.innerHTML = "";
+        
+        if (pata4.length === 0) {
+            displayNoResults();
+            return;  
+        }
+        
+        Sshow(pata4);
+    } catch (error) {
+        hideLoadingState();
+        console.error('Error fetching song recommendations:', error);
         displayNoResults();
-        return;  
     }
-    Sshow(pata4);
 }
 
 function displayNoResults() {
@@ -273,20 +254,58 @@ function displayNoResults() {
 }
 
 function setupEventListeners() {
-    // Category Filters
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
+            // Show/hide example sections
+            const movieExamples = document.getElementById('movieExamples');
+            const songExamples = document.getElementById('songExamples');
+            const searchBox = document.querySelector('.search-box');
+            const category = btn.dataset.category;
+            
+            // Hide all examples first
+            movieExamples.style.display = 'none';
+            songExamples.style.display = 'none';
+            
+            // Show relevant examples and update placeholder
+            if (category === 'movies') {
+                searchBox.placeholder = "Search movies, books, songs...";
+                movieExamples.style.display = 'block';
+            } else if (category === 'songs') {
+                searchBox.placeholder = "Search movies, books, songs...";
+                songExamples.style.display = 'block';
+            } else if (category === 'books') {
+                searchBox.placeholder = "Search movies, books, songs...";
+            }
+            
             filterRecommendations(btn.dataset.category, document.querySelector('.search-box').value);
         });
     });
 
-    // Search Functionality
+    // Example movie button click handlers
+    document.querySelectorAll('.example-movie-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const movieName = btn.dataset.movie;
+            document.querySelector('.search-box').value = movieName;
+            dakka(); // Trigger movie search
+        });
+    });
+
+    // Example song button click handlers
+    document.querySelectorAll('.example-song-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const songName = btn.dataset.song;
+            document.querySelector('.search-box').value = songName;
+            Sakka(); // Trigger song search
+        });
+    });
+
     document.querySelector('.search-btn').addEventListener('click', () => {
         const searchTerm = document.querySelector('.search-box').value;
         const category = document.querySelector('.category-btn.active').dataset.category;
-        // filterRecommendations(category, searchTerm);
+        
         if (category === "books") rakka();
         else if (category === "movies") dakka();
         else Sakka();
@@ -296,7 +315,7 @@ function setupEventListeners() {
         if (e.key === 'Enter') {
             const searchTerm = e.target.value;
             const category = document.querySelector('.category-btn.active').dataset.category;
-            // filterRecommendations(category, searchTerm);
+            
             if (category === "books") rakka();
             else if (category === "movies") dakka();
             else Sakka();
@@ -307,7 +326,7 @@ function setupEventListeners() {
 function setupCardClickListeners(desc) {
     document.querySelectorAll('.movies-card img').forEach(img => {
         img.addEventListener('click', async (event) => {
-            event.stopPropagation(); // Prevents bubbling up to card
+            event.stopPropagation();
             const card = img.closest('.movies-card');
             const movieId = card.getAttribute('data-movie-id');
             if (movieId) {
@@ -333,14 +352,11 @@ function setupCardClickListeners(desc) {
         });
     });
 
-    // Close modal logic
     document.querySelector(".close-btn").addEventListener("click", () => {
         document.getElementById("trailer-modal").classList.add("hidden");
         document.getElementById("trailer-video").src = "";
     });
 }
-
-
 
 document.addEventListener("click", function (e) {
     if (e.target.classList.contains("toggle-btn")) {
@@ -361,22 +377,16 @@ document.addEventListener("click", function (e) {
     }
 });
 
-
-// const recc = document.getElementById("recc");
-// recc.addEventListener("click",()=>{
-//     window.location.href = `${window.location.origin}/index2`
-// })
-
-
 function show(books) {
+    hideLoadingState();
     books.forEach(book => {
         let html = `<div class="card books-card">
-                        <img src="${book.image}" alt="The Great Gatsby">
+                        <img src="${book.image}" alt="${book.name}">
                         <h3>${book.name}</h3>
                         <div class="card-details">
-                        <p><strong>Author:</strong>${book.author}</p>
-                        <p><strong>Views:</strong>${book.votes}</p>
-                        <p><strong>Ratings:</strong>${book.rating}</p>
+                            <p><strong>Author:</strong> ${book.author}</p>
+                            <p><strong>Views:</strong> ${book.votes}</p>
+                            <p><strong>Ratings:</strong> ${book.rating}</p>
                         </div>
                     </div>`
         dada.innerHTML = dada.innerHTML + html;
@@ -384,12 +394,13 @@ function show(books) {
 }
 
 function Mshow(movies) {
+    hideLoadingState();
     movies.forEach(movie => {
         let dtml = `<div class="card movies-card">
-                        <img src="${movie.image}" alt="Inception">
+                        <img src="${movie.image}" alt="${movie.m_name}">
                         <h3>${movie.m_name}</h3>
                         <p>A mind-bending heist movie</p>
-                         <div class="card-details">
+                        <div class="card-details">
                             <p><strong>Director:</strong> Christopher Nolan</p>
                             <p><strong>Released:</strong> 2010</p>
                             <p><strong>Rating:</strong> 8.8/10</p>
@@ -400,11 +411,12 @@ function Mshow(movies) {
 }
 
 function Sshow(songs) {
+    hideLoadingState();
     songs.forEach(song => {
         let html = `<div class="card books-card">
-                        <img src="${song.image}" alt="The Great Gatsby">
+                        <img src="${song.image}" alt="${song.s_name}">
                         <h3>${song.s_name}</h3>
-                         <div class="card-details">
+                        <div class="card-details">
                             <p><strong>Artist:</strong> ${song.artist}</p>
                         </div>
                     </div>`
