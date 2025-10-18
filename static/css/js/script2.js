@@ -191,7 +191,11 @@ async function rakka() {
     });
 
     const pata = await response.json();
-    dada.innerHTML = ""
+    dada.innerHTML = "";
+    if (pata.length === 0) {
+        displayNoResults();
+        return;
+    }
     pata.forEach(book => {
         let btml = `<div class="card books-card">
                         <img src="${book[2]}" alt="The Great Gatsby">
@@ -216,6 +220,10 @@ async function dakka() {
     });
     const daka = await response1.json();
     dada.innerHTML = "";
+    if (daka.length === 0) {
+        displayNoResults();
+        return;
+    }
     daka.forEach(movie => {
         let ctml = `<div class="card movies-card" data-movie-id="${movie.id}">
                         <img src="${movie.image}" alt="Inception">
@@ -248,6 +256,10 @@ async function Sakka() {
 
     const pata4 = await response4.json();
     dada.innerHTML = "";
+    if (pata4.length === 0) {
+        displayNoResults();
+        return;  
+    }
     Sshow(pata4);
 }
 
@@ -384,7 +396,7 @@ function Mshow(movies) {
                         </div>
                     </div>`
         dada.innerHTML = dada.innerHTML + dtml;
-    });
+    }); 
 }
 
 function Sshow(songs) {

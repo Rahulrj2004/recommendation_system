@@ -49,26 +49,57 @@ Ssimilarity = pickle.load(open("Ssimilarity.pkl","rb"))
 def index():
     return render_template("index.html")
 
+# def fetch_poster(movie_id):
+#     try:
+#         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=dc579d9a52f2ca4eb19e6a740c29578f&language=en-US"
+#         response = requests.get(url)
+#         data = response.json()
+#         poster_path = data.get('poster_path')
+#         vote_average = data.get("vote_average")
+#         date = data.get("release_date")
+#         if poster_path:
+#             poster_url =  "https://image.tmdb.org/t/p/w500/" + poster_path
+#         else:
+#             poster_url  = "https://via.placeholder.com/500x750?text=No+Image"
+#         return {
+#         "poster_url": poster_url,
+#         "vote_average": vote_average,
+#         "release_date": date
+#     }
+#     except Exception as e:
+#         print(f"Error fetching poster: {e}")
+#         return "https://via.placeholder.com/500x750?text=Error"
+
 def fetch_poster(movie_id):
     try:
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=dc579d9a52f2ca4eb19e6a740c29578f&language=en-US"
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
         data = response.json()
+
         poster_path = data.get('poster_path')
         vote_average = data.get("vote_average")
         date = data.get("release_date")
+
         if poster_path:
-            poster_url =  "https://image.tmdb.org/t/p/w500/" + poster_path
+            poster_url = "https://image.tmdb.org/t/p/w500/" + poster_path
         else:
-            poster_url  = "https://via.placeholder.com/500x750?text=No+Image"
+            poster_url = "https://via.placeholder.com/500x750?text=No+Image"
+
         return {
-        "poster_url": poster_url,
-        "vote_average": vote_average,
-        "release_date": date
-    }
+            "poster_url": poster_url,
+            "vote_average": vote_average,
+            "release_date": date
+        }
+
     except Exception as e:
         print(f"Error fetching poster: {e}")
-        return "https://via.placeholder.com/500x750?text=Error"
+        # Always return a dictionary — never a string
+        return {
+            "poster_url": "https://via.placeholder.com/500x750?text=Error",
+            "vote_average": None,
+            "release_date": None
+        }
 
 @app.route("/movie-trailer/<int:movie_id>")
 def get_movie_trailer(movie_id):
@@ -116,11 +147,22 @@ def get_books():
     return jsonify(books)            
 
 @app.route("/recommend_books", methods=["POST"])
-def recommend():
+# def recommend():
+#     data = request.get_json()
+#     user_input = data.get("user_input")
+#     index = np.where(pt.index == user_input)[0][0]
+#     similar_items  = sorted(list(enumerate(similarity_score[index])),key= lambda x:x[1],reverse =True)[1:6]
+
+def recommend():         
     data = request.get_json()
     user_input = data.get("user_input")
-    index = np.where(pt.index == user_input)[0][0]
-    similar_items  = sorted(list(enumerate(similarity_score[index])),key= lambda x:x[1],reverse =True)[1:6]
+
+    try:
+        index = np.where(pt.index == user_input)[0][0]
+    except IndexError:
+        return jsonify([])
+
+    similar_items = sorted(list(enumerate(similarity_score[index])), key=lambda x: x[1], reverse=True)[1:6]
 
     data = []
     for i in similar_items:
@@ -133,33 +175,84 @@ def recommend():
     return jsonify(data)
 
 @app.route("/recommend-movies", methods=["POST"])
-def Mrecommend():
-    data = request.get_json()
-    movie = data.get("user_Input")
-    print(movie)
-    movie_index = movies[movies['title'] == movie].index[0]
-    distance = Msimilarity_score[movie_index]
-    movie_list = sorted(list(enumerate(distance)) , reverse=True , key=lambda x:x[1])[1:6]
+# def Mrecommend():
+#     data = request.get_json()
+#     movie = data.get("user_Input")
+#     print(movie)
+#     movie_index = movies[movies['title'] == movie].index[0]
+#     distance = Msimilarity_score[movie_index]
+#     movie_list = sorted(list(enumerate(distance)) , reverse=True , key=lambda x:x[1])[1:6]
 
-    recommend_movies = []
-    for i in movie_list:  
-        movie_id = movies.iloc[i[0]].movie_id
-        poster_data = fetch_poster(movie_id)
-        recommend_movies.append({"name":movies.iloc[i[0]].title,
-                                 "tag":movies.iloc[i[0]].tags,
-                                 "image": poster_data["poster_url"],
-                                 "ratings":poster_data["vote_average"],
-                                 "release":poster_data["release_date"],
-                                 "id":int(movie_id)    
-                                 })
-    return jsonify(recommend_movies)   
+# def Mrecommend():
+#     data = request.get_json()  
+#     movie = data.get("user_Input")
+#     try:
+#         movie_index = movies[movies['title'] == movie].index[0]
+#     except IndexError:
+#         return jsonify([])
+
+#     distance = Msimilarity_score[movie_index]
+#     movie_list = sorted(list(enumerate(distance)), reverse=True, key=lambda x: x[1])[1:6]
+
+#     recommend_movies = []
+#     for i in movie_list:  
+#         movie_id = movies.iloc[i[0]].movie_id
+#         poster_data = fetch_poster(movie_id)
+#         recommend_movies.append({"name":movies.iloc[i[0]].title,
+#                                  "tag":movies.iloc[i[0]].tags,
+#                                  "image": poster_data["poster_url"],
+#                                  "ratings":poster_data["vote_average"],
+#                                  "release":poster_data["release_date"],
+#                                  "id":int(movie_id)    
+#                                  })
+#     return jsonify(recommend_movies)   
+
+@app.route("/recommend-movies", methods=["POST"])
+def Mrecommend():
+    try:
+        data = request.get_json()
+        movie = data.get("user_Input")
+
+        movie_index = movies[movies['title'] == movie].index[0]
+        distance = Msimilarity_score[movie_index]
+        movie_list = sorted(list(enumerate(distance)), reverse=True, key=lambda x: x[1])[1:6]
+
+        recommend_movies = []
+        for i in movie_list:
+            movie_id = movies.iloc[i[0]].movie_id
+            poster_data = fetch_poster(movie_id)
+            recommend_movies.append({
+                "name": movies.iloc[i[0]].title,
+                "tag": movies.iloc[i[0]].tags,
+                "image": poster_data["poster_url"],
+                "ratings": poster_data["vote_average"],
+                "release": poster_data["release_date"],
+                "id": int(movie_id)
+            })
+
+        return jsonify(recommend_movies)
+
+    except Exception as e:
+        print("Error in /recommend-movies:", e)
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/recommend-songs", methods=["POST"])
+# def Srecommend():
+#     data = request.get_json()
+#     Song = data.get("User_input")
+#     print(Song)
+#     index = music[music["song"] == Song].index[0]
+#     distances = sorted(list(enumerate(Ssimilarity[index])), reverse=True, key=lambda x: x[1])
+
 def Srecommend():
     data = request.get_json()
     Song = data.get("User_input")
-    print(Song)
-    index = music[music["song"] == Song].index[0]
+    try:
+        index = music[music["song"] == Song].index[0]
+    except IndexError:
+        return jsonify([])
+
     distances = sorted(list(enumerate(Ssimilarity[index])), reverse=True, key=lambda x: x[1])
     recommend_songs = []
     for i in distances[1:6]:
