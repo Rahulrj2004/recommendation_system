@@ -17,8 +17,6 @@ CLIENT_SECRET = "da284dd9abfa4242add5f3676aa77999"
 client_credentials_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-# ============ LAZY LOADING GLOBALS ============
-# These will be loaded only when needed
 _similarity_score = None
 _Msimilarity_score = None
 _Ssimilarity = None
@@ -27,7 +25,6 @@ _books = None
 _movies = None
 _music = None
 
-# ============ CACHE FOR SPOTIFY COVERS ============
 _cover_cache = {}
 
 def get_song_cover(song_name, artist_name):
@@ -53,7 +50,7 @@ def get_song_cover(song_name, artist_name):
     _cover_cache[cache_key] = default_cover
     return default_cover
 
-# ============ LAZY LOADERS ============
+#  LAZY LOADERS 
 def load_book_similarity():
     global _similarity_score, _pt, _books
     if _similarity_score is None:
@@ -83,7 +80,6 @@ def load_song_similarity():
         print("Song similarity loaded!")
     return _Ssimilarity, _music
 
-# ============ LOAD ONLY ESSENTIAL DATA AT STARTUP ============
 print("Loading essential data...")
 popular_df = pickle.load(open("popular.pkl", "rb"))
 
@@ -104,7 +100,7 @@ print("Essential data loaded! Memory optimized.")
 def index():
     return render_template("index.html")
 
-# ============ POSTER FETCH WITH SESSION REUSE ============
+
 _poster_session = requests.Session()
 
 def fetch_poster(movie_id):
